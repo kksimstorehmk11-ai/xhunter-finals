@@ -3,9 +3,7 @@ on: [push, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    env:
-      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+    runs-on: ubuntu-22.04  # ဗားရှင်းကို အသေသတ်မှတ်လိုက်ခြင်း
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -16,13 +14,14 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          pip install --upgrade pip
           pip install --upgrade buildozer cython==0.29.33 kivy
       - name: Build APK
         run: |
-          # Buildozer အလုပ်လုပ်ဖို့ လိုအပ်တဲ့ license တွေကို ကြိုတင်လက်ခံခြင်း
           yes | buildozer -v android debug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: XHunter-App
           path: bin/*.apk
+          
